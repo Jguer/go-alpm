@@ -437,22 +437,6 @@ func (h *Handle) SetArch(str string) error {
 	})
 }
 
-func (h *Handle) DeltaRatio() (float64, error) {
-	ok := C.alpm_option_get_deltaratio(h.ptr)
-	if ok < 0 {
-		return float64(ok), h.LastError()
-	}
-	return float64(ok), nil
-}
-
-func (h *Handle) SetDeltaRatio(ratio float64) error {
-	ok := C.alpm_option_set_deltaratio(h.ptr, C.double(ratio))
-	if ok < 0 {
-		return h.LastError()
-	}
-	return nil
-}
-
 // LocalDB returns the local database relative to the given handle.
 func (h *Handle) LocalDB() (*DB, error) {
 	db := C.alpm_get_localdb(h.ptr)
