@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/Jguer/go-alpm"
 	"log"
+	paconf "github.com/Morganamilo/go-pacmanconf"
 )
 
 func human(size int64) string {
@@ -52,6 +53,47 @@ func main() {
 		return
 	}
 	defer h.Release()
+
+
+	PacmanConfig, _, err := paconf.ParseFile("/etc/pacman.conf")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	/*
+		We have to configure alpm with pacman configuration
+		to load the repositories and other stuff
+	*/
+	for _, repo := range PacmanConfig.Repos {
+		db, err := h.RegisterSyncDB(repo.Name, 0)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		db.SetServers(repo.Servers)
+
+
+		/*
+			Configure repository usage to match with
+			the alpm library provided formats
+		*/
+		if len(repo.Usage) == 0 { db.SetUsage(alpm.UsageAll) }
+		for _, usage := range repo.Usage {
+			switch usage {
+			case "Sync":
+				db.SetUsage(alpm.UsageSync)
+			case "Search":
+				db.SetUsage(alpm.UsageSearch)
+			case "Install":
+				db.SetUsage(alpm.UsageInstall)
+			case "Upgrade":
+				db.SetUsage(alpm.UsageUpgrade)
+			case "All":
+				db.SetUsage(alpm.UsageAll)
+			}
+		}
+	}
 
 	upgrades, err := upgrades(h)
 	if err != nil {
