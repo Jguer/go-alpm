@@ -1,6 +1,6 @@
 export GO111MODULE=on
 
-GOFLAGS := -v -mod=vendor
+GOFLAGS := -v -trimpath -mod=readonly -modcacherw
 EXTRA_GOFLAGS ?=
 LDFLAGS := $(LDFLAGS)
 GO ?= go

@@ -26,10 +26,10 @@ type Handle struct {
 }
 
 //
-//alpm options getters and setters
+// alpm options getters and setters
 //
 
-//helper functions for wrapping list_t getters and setters
+// helper functions for wrapping list_t getters and setters
 func (h *Handle) optionGetList(f func(*C.alpm_handle_t) *C.alpm_list_t) (StringList, error) {
 	alpmList := f(h.ptr)
 	goList := StringList{(*list)(unsafe.Pointer(alpmList))}
@@ -88,7 +88,7 @@ func (h *Handle) optionMatchList(dir string, f func(*C.alpm_handle_t, *C.char) C
 	return false, nil
 }
 
-//helper functions for *char based getters and setters
+// helper functions for *char based getters and setters
 func (h *Handle) optionGetStr(f func(*C.alpm_handle_t) *C.char) (string, error) {
 	cStr := f(h.ptr)
 	str := C.GoString(cStr)
@@ -105,13 +105,13 @@ func (h *Handle) optionSetStr(str string, f func(*C.alpm_handle_t, *C.char) C.in
 	ok := f(h.ptr, cStr)
 
 	if ok < 0 {
-		h.LastError()
+		return h.LastError()
 	}
 	return nil
 }
 
 //
-//end of helpers
+// end of helpers
 //
 
 func (h *Handle) Root() (string, error) {
@@ -348,7 +348,7 @@ func (h *Handle) RemoveIgnoreGroup(dir string) (bool, error) {
 	return goList, nil
 }*/
 
-//use alpm_depend_t
+// use alpm_depend_t
 func (h *Handle) AssumeInstalled() (DependList, error) {
 	alpmList := C.alpm_option_get_assumeinstalled(h.ptr)
 	depList := DependList{(*list)(unsafe.Pointer(alpmList))}
@@ -401,22 +401,22 @@ func (h *Handle) AddAssumeInstalled(dep Depend) error {
 
 // TODO: Fix
 //  func (h *Handle) RemoveAssumeInstalled(dep Depend) (bool, error) {
-//internally alpm uses alpm_list_remove to remove a alpm_depend_t from
-//the list
-//i believe this function considers items equal if they are the same
-//item in memeory, not just the same data
-//every time we convert a go Depend to a alpm_depend_c we create a new
-//instance of a alpm_depend_c
-//this means that if you add a Depend using AddAssumeInstalled then try
-//to remove it using the same Depend c will consider them different
-//items and not remove them
-//pacamn does not use alpm_option_set_assumeinstalled in its source
-//code so anybody using this should beable to do file without it
-//although for the sake of completeness it would be nice to have this
-//working
-// 	panic("This function (RemoveAssumeInstalled) does not work properly, please do not use. See source code for more details")
-// 	cDep := convertCDepend(dep)
-// 	defer freeCDepend(cDep)
+// internally alpm uses alpm_list_remove to remove a alpm_depend_t from
+// the list
+// I believe this function considers items equal if they are the same
+// item in memeory, not just the same data
+// every time we convert a go Depend to a alpm_depend_c we create a new
+// instance of a alpm_depend_c
+// this means that if you add a Depend using AddAssumeInstalled then try
+// to remove it using the same Depend c will consider them different
+// items and not remove them
+// pacamn does not use alpm_option_set_assumeinstalled in its source
+// code so anybody using this should beable to do file without it
+// although for the sake of completeness it would be nice to have this
+// working
+// panic("This function (RemoveAssumeInstalled) does not work properly, please do not use. See source code for more details")
+// cDep := convertCDepend(dep)
+// defer freeCDepend(cDep)
 
 // 	ok := C.alpm_option_remove_assumeinstalled(h.ptr, cDep)
 // 	if ok < 0 {
@@ -438,7 +438,7 @@ func (h *Handle) SetArch(str string) error {
 }
 
 // LocalDB returns the local database relative to the given handle.
-func (h *Handle) LocalDB() (*DB, error) {
+func (h *Handle) LocalDB() (IDB, error) {
 	db := C.alpm_get_localdb(h.ptr)
 	if db == nil {
 		return nil, h.LastError()
@@ -447,13 +447,13 @@ func (h *Handle) LocalDB() (*DB, error) {
 }
 
 // SyncDBs returns list of Synced DBs.
-func (h *Handle) SyncDBs() (DBList, error) {
+func (h *Handle) SyncDBs() (IDBList, error) {
 	dblist := C.alpm_get_syncdbs(h.ptr)
 	if dblist == nil {
-		return DBList{nil, *h}, h.LastError()
+		return &DBList{nil, *h}, h.LastError()
 	}
 	dblistPtr := unsafe.Pointer(dblist)
-	return DBList{(*list)(dblistPtr), *h}, nil
+	return &DBList{(*list)(dblistPtr), *h}, nil
 }
 
 func (h *Handle) CheckSpace() (bool, error) {

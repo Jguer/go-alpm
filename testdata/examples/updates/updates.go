@@ -8,7 +8,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/Jguer/go-alpm"
 	"log"
 	paconf "github.com/Morganamilo/go-pacmanconf"
 )
@@ -25,7 +24,7 @@ func human(size int64) string {
 	return fmt.Sprintf("%d%s", size, "B")
 }
 
-func upgrades(h *alpm.Handle) ([]alpm.Package, error) {
+func upgrades(h *alpm.Handle) ([]alpm.IPackage, error) {
 	localDb, err := h.LocalDB()
 	if err != nil {
 		return nil, err
@@ -36,11 +35,11 @@ func upgrades(h *alpm.Handle) ([]alpm.Package, error) {
 		return nil, err
 	}
 
-	slice := []alpm.Package{}
+	slice := []alpm.IPackage{}
 	for _, pkg := range localDb.PkgCache().Slice() {
 		newPkg := pkg.SyncNewVersion(syncDbs)
 		if newPkg != nil {
-			slice = append(slice, *newPkg)
+			slice = append(slice, newPkg)
 		}
 	}
 	return slice, nil

@@ -10,11 +10,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Jguer/go-alpm"
+	"github.com/Jguer/go-alpm/v2"
 )
 
 func main() {
-
 	h, er := alpm.Initialize("/", "/var/lib/pacman")
 	if er != nil {
 		print(er, "\n")
@@ -29,6 +28,8 @@ func main() {
 
 	for _, pkg := range db.PkgCache().Slice() {
 		fmt.Printf("%s %s\n", pkg.Name(), pkg.Version())
+		fmt.Println(pkg.Depends().Slice())
+		break
 	}
 
 	if h.Release() != nil {

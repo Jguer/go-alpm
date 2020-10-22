@@ -53,9 +53,9 @@ func convertCDepend(dep Depend) *C.alpm_depend_t {
 }
 
 func freeCDepend(dep *C.alpm_depend_t) {
-	defer C.free(unsafe.Pointer(dep.name))
-	defer C.free(unsafe.Pointer(dep.version))
-	defer C.free(unsafe.Pointer(dep.desc))
+	C.free(unsafe.Pointer(dep.name))
+	C.free(unsafe.Pointer(dep.version))
+	C.free(unsafe.Pointer(dep.desc))
 }
 
 func (dep Depend) String() string {
@@ -71,12 +71,13 @@ type File struct {
 
 func convertFile(file *C.alpm_file_t) (File, error) {
 	if file == nil {
-		return File{}, errors.New("No file")
+		return File{}, errors.New("no file")
 	}
 	return File{
 		Name: C.GoString(file.name),
 		Size: int64(file.size),
-		Mode: uint32(file.mode)}, nil
+		Mode: uint32(file.mode),
+	}, nil
 }
 
 func convertFilelist(files *C.alpm_filelist_t) []File {
@@ -86,7 +87,8 @@ func convertFilelist(files *C.alpm_filelist_t) []File {
 	rawItems := reflect.SliceHeader{
 		Len:  size,
 		Cap:  size,
-		Data: uintptr(unsafe.Pointer(files.files))}
+		Data: uintptr(unsafe.Pointer(files.files)),
+	}
 
 	cFiles := *(*[]C.alpm_file_t)(unsafe.Pointer(&rawItems))
 
@@ -140,7 +142,7 @@ func (l StringList) ForEach(f func(string) error) error {
 
 func (l StringList) Slice() []string {
 	slice := []string{}
-	l.ForEach(func(s string) error {
+	_ = l.ForEach(func(s string) error {
 		slice = append(slice, s)
 		return nil
 	})
@@ -167,7 +169,7 @@ func (l BackupList) ForEach(f func(BackupFile) error) error {
 }
 
 func (l BackupList) Slice() (slice []BackupFile) {
-	l.ForEach(func(f BackupFile) error {
+	_ = l.ForEach(func(f BackupFile) error {
 		slice = append(slice, f)
 		return nil
 	})
@@ -203,7 +205,7 @@ func (question QuestionAny) QuestionInstallIgnorepkg() (QuestionInstallIgnorepkg
 		return *(*QuestionInstallIgnorepkg)(unsafe.Pointer(&question)), nil
 	}
 
-	return QuestionInstallIgnorepkg{}, fmt.Errorf("Can not convert to QuestionInstallIgnorepkg")
+	return QuestionInstallIgnorepkg{}, fmt.Errorf("cannot convert to QuestionInstallIgnorepkg")
 }
 
 func (question QuestionAny) QuestionSelectProvider() (QuestionSelectProvider, error) {
@@ -211,7 +213,7 @@ func (question QuestionAny) QuestionSelectProvider() (QuestionSelectProvider, er
 		return *(*QuestionSelectProvider)(unsafe.Pointer(&question)), nil
 	}
 
-	return QuestionSelectProvider{}, fmt.Errorf("Can not convert to QuestionInstallIgnorepkg")
+	return QuestionSelectProvider{}, fmt.Errorf("cannot convert to QuestionInstallIgnorepkg")
 }
 
 func (question QuestionAny) QuestionReplace() (QuestionReplace, error) {
@@ -219,7 +221,7 @@ func (question QuestionAny) QuestionReplace() (QuestionReplace, error) {
 		return *(*QuestionReplace)(unsafe.Pointer(&question)), nil
 	}
 
-	return QuestionReplace{}, fmt.Errorf("Can not convert to QuestionReplace")
+	return QuestionReplace{}, fmt.Errorf("cannot convert to QuestionReplace")
 }
 
 func (question QuestionInstallIgnorepkg) SetInstall(install bool) {
@@ -275,13 +277,6 @@ func (question QuestionReplace) NewPkg(h *Handle) *Package {
 func (question QuestionReplace) OldPkg(h *Handle) *Package {
 	return &Package{
 		question.ptr.oldpkg,
-		*h,
-	}
-}
-
-func (question QuestionReplace) newDB(h *Handle) *DB {
-	return &DB{
-		question.ptr.newdb,
 		*h,
 	}
 }
