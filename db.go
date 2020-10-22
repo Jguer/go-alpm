@@ -31,16 +31,16 @@ type DBList struct {
 }
 
 // ForEach executes an action on each DB.
-func (l DBList) ForEach(f func(DB) error) error {
+func (l DBList) ForEach(f func(IDB) error) error {
 	return l.forEach(func(p unsafe.Pointer) error {
-		return f(DB{(*C.alpm_db_t)(p), l.handle})
+		return f(&DB{(*C.alpm_db_t)(p), l.handle})
 	})
 }
 
 // Slice converst DB list to DB slice.
-func (l DBList) Slice() []DB {
-	slice := []DB{}
-	l.ForEach(func(db DB) error {
+func (l DBList) Slice() []IDB {
+	slice := []IDB{}
+	_ = l.ForEach(func(db IDB) error {
 		slice = append(slice, db)
 		return nil
 	})
@@ -48,14 +48,14 @@ func (l DBList) Slice() []DB {
 }
 
 // SyncDBByName finds a registered database by name.
-func (h *Handle) SyncDBByName(name string) (db *DB, err error) {
+func (h *Handle) SyncDBByName(name string) (db IDB, err error) {
 	dblist, err := h.SyncDBs()
 	if err != nil {
 		return nil, err
 	}
-	dblist.ForEach(func(b DB) error {
+	_ = dblist.ForEach(func(b IDB) error {
 		if b.Name() == name {
-			db = &b
+			db = b
 			return io.EOF
 		}
 		return nil
@@ -67,7 +67,7 @@ func (h *Handle) SyncDBByName(name string) (db *DB, err error) {
 }
 
 // RegisterSyncDB Loads a sync database with given name and signature check level.
-func (h *Handle) RegisterSyncDB(dbname string, siglevel SigLevel) (*DB, error) {
+func (h *Handle) RegisterSyncDB(dbname string, siglevel SigLevel) (IDB, error) {
 	cName := C.CString(dbname)
 	defer C.free(unsafe.Pointer(cName))
 
@@ -130,7 +130,7 @@ func (db *DB) SetUsage(usage Usage) {
 }
 
 // Name searches a package in db.
-func (db *DB) Pkg(name string) *Package {
+func (db *DB) Pkg(name string) IPackage {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	ptr := C.alpm_db_get_pkg(db.ptr, cName)
@@ -141,7 +141,7 @@ func (db *DB) Pkg(name string) *Package {
 }
 
 // PkgCachebyGroup returns a PackageList of packages belonging to a group
-func (l DBList) FindGroupPkgs(name string) PackageList {
+func (l DBList) FindGroupPkgs(name string) IPackageList {
 	cName := C.CString(name)
 	defer C.free(unsafe.Pointer(cName))
 	pkglist := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
@@ -150,12 +150,12 @@ func (l DBList) FindGroupPkgs(name string) PackageList {
 }
 
 // PkgCache returns the list of packages of the database
-func (db *DB) PkgCache() PackageList {
+func (db *DB) PkgCache() IPackageList {
 	pkgcache := (*list)(unsafe.Pointer(C.alpm_db_get_pkgcache(db.ptr)))
 	return PackageList{pkgcache, db.handle}
 }
 
-func (db *DB) Search(targets []string) PackageList {
+func (db *DB) Search(targets []string) IPackageList {
 	var needles *C.alpm_list_t
 
 	for _, str := range targets {

@@ -77,14 +77,14 @@ func TestPkginfo(t *testing.T) {
 
 	pkg := db.Pkg("glibc")
 	buf := bytes.NewBuffer(nil)
-	pkginfoTemplate.Execute(buf, PrettyPackage{pkg})
+	pkginfoTemplate.Execute(buf, PrettyPackage{pkg.(*Package)})
 	t.Logf("%s...", buf.Bytes()[:1024])
 	t.Logf("Should ignore %t", pkg.ShouldIgnore())
 
 	pkg = db.Pkg("linux")
 	if pkg != nil {
 		buf = bytes.NewBuffer(nil)
-		pkginfoTemplate.Execute(buf, PrettyPackage{pkg})
+		pkginfoTemplate.Execute(buf, PrettyPackage{pkg.(*Package)})
 		t.Logf("%s...", buf.Bytes()[:1024])
 		t.Logf("Should ignore %t", pkg.ShouldIgnore())
 	}
@@ -106,7 +106,6 @@ func TestPkgNoExist(t *testing.T) {
 }
 
 func TestPkgFiles(t *testing.T) {
-
 	h, er := Initialize(root, dbpath)
 	defer h.Release()
 	if er != nil {
@@ -124,5 +123,4 @@ func TestPkgFiles(t *testing.T) {
 	if err == nil {
 		t.Errorf("File should be nil but got %v", err)
 	}
-
 }

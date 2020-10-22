@@ -70,6 +70,7 @@ const (
 	SigPackageMarginalOk
 	SigPackageUnknownOk
 )
+
 const (
 	SigDatabase SigLevel = 1 << (10 + iota)
 	SigDatabaseOptional

@@ -44,16 +44,16 @@ type PackageList struct {
 }
 
 // ForEach executes an action on each package of the PackageList.
-func (l PackageList) ForEach(f func(Package) error) error {
+func (l PackageList) ForEach(f func(IPackage) error) error {
 	return l.forEach(func(p unsafe.Pointer) error {
-		return f(Package{(*C.alpm_pkg_t)(p), l.handle})
+		return f(&Package{(*C.alpm_pkg_t)(p), l.handle})
 	})
 }
 
 // Slice converts the PackageList to a Package Slice.
-func (l PackageList) Slice() []Package {
-	slice := []Package{}
-	l.ForEach(func(p Package) error {
+func (l PackageList) Slice() []IPackage {
+	slice := []IPackage{}
+	_ = l.ForEach(func(p IPackage) error {
 		slice = append(slice, p)
 		return nil
 	})
@@ -61,13 +61,16 @@ func (l PackageList) Slice() []Package {
 }
 
 // SortBySize returns a PackageList sorted by size.
-func (l PackageList) SortBySize() PackageList {
+func (l PackageList) SortBySize() IPackageList {
 	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
 
 	pkgCache := (*list)(unsafe.Pointer(
 		C.alpm_list_msort(pkgList,
 			C.alpm_list_count(pkgList),
 			C.alpm_list_fn_cmp(C.pkg_cmp))))
+	if pkgCache == nil {
+		return nil
+	}
 
 	return PackageList{pkgCache, l.handle}
 }
@@ -86,7 +89,7 @@ func (l DependList) ForEach(f func(Depend) error) error {
 // Slice converts the DependList to a Depend Slice.
 func (l DependList) Slice() []Depend {
 	slice := []Depend{}
-	l.ForEach(func(dep Depend) error {
+	_ = l.ForEach(func(dep Depend) error {
 		slice = append(slice, dep)
 		return nil
 	})
@@ -133,7 +136,7 @@ func (pkg *Package) Conflicts() DependList {
 }
 
 // DB returns the package's origin database.
-func (pkg *Package) DB() *DB {
+func (pkg *Package) DB() IDB {
 	ptr := C.alpm_pkg_get_db(pkg.pmpkg)
 	if ptr == nil {
 		return nil
@@ -298,4 +301,8 @@ func (pkg *Package) ComputeOptionalFor() []string {
 func (pkg *Package) ShouldIgnore() bool {
 	result := C.alpm_pkg_should_ignore(pkg.handle.ptr, pkg.pmpkg)
 	return result == 1
+}
+
+func (pkg *Package) Type() string {
+	return "alpm"
 }

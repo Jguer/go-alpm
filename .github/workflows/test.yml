@@ -6,14 +6,20 @@ on:
       - pacman*
     paths-ignore:
       - "examples/**"
+      - "Dockerfile"
+      - "**/builder-image.yml"
   pull_request:
 
 jobs:
   build:
     name: Build and test go-alpm
     runs-on: ubuntu-latest
+    container:
+      image: jguer/goalpm-builder:latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1#
-      - name: Run Build and tests
-        run: ./testdata/ci/test.sh
+        uses: actions/checkout@v2
+      - name: Lint
+        run: /app/bin/golangci-lint run ./...
+      - name: Run Build and Tests
+        run: make test

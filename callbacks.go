@@ -20,8 +20,10 @@ import (
 	"unsafe"
 )
 
-type logCallbackSig func(LogLevel, string)
-type questionCallbackSig func(QuestionAny)
+type (
+	logCallbackSig      func(LogLevel, string)
+	questionCallbackSig func(QuestionAny)
+)
 
 var DefaultLogLevel = LogWarning
 
@@ -31,8 +33,10 @@ func DefaultLogCallback(lvl LogLevel, s string) {
 	}
 }
 
-var globalLogCallback logCallbackSig
-var globalQuestionCallback questionCallbackSig
+var (
+	globalLogCallback      logCallbackSig
+	globalQuestionCallback questionCallbackSig
+)
 
 //export logCallback
 func logCallback(level C.alpm_loglevel_t, cstring *C.char) {

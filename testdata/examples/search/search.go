@@ -9,7 +9,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/Jguer/go-alpm"
+	"github.com/Jguer/go-alpm/v2"
 )
 
 func main() {
