@@ -425,18 +425,6 @@ func (h *Handle) AddAssumeInstalled(dep Depend) error {
 // 	return ok == 1, nil
 // }
 
-func (h *Handle) Arch() (string, error) {
-	return h.optionGetStr(func(handle *C.alpm_handle_t) *C.char {
-		return C.alpm_option_get_arch(handle)
-	})
-}
-
-func (h *Handle) SetArch(str string) error {
-	return h.optionSetStr(str, func(handle *C.alpm_handle_t, cStr *C.char) C.int {
-		return C.alpm_option_set_arch(handle, cStr)
-	})
-}
-
 // LocalDB returns the local database relative to the given handle.
 func (h *Handle) LocalDB() (IDB, error) {
 	db := C.alpm_get_localdb(h.ptr)
