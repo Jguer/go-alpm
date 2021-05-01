@@ -65,7 +65,7 @@ func (l PackageList) SortBySize() IPackageList {
 	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
 
 	pkgCache := (*list)(unsafe.Pointer(
-		C.alpm_list_msort(pkgList,
+		C.alpm_list_msort(pkgList, //nolint
 			C.alpm_list_count(pkgList),
 			C.alpm_list_fn_cmp(C.pkg_cmp))))
 	if pkgCache == nil {

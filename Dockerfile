@@ -6,7 +6,7 @@ WORKDIR /app
 
 RUN pacman -Syu --overwrite=* --needed --noconfirm go
 
-RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.30.0
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.39.0
 
 COPY go.mod .
 

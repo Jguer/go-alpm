@@ -9,7 +9,6 @@ package alpm
 // #cgo LDFLAGS: -lalpm
 // #include <alpm.h>
 import "C"
-
 import "unsafe"
 
 // Init initializes alpm handle

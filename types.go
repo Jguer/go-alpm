@@ -90,7 +90,7 @@ func convertFilelist(files *C.alpm_filelist_t) []File {
 		Data: uintptr(unsafe.Pointer(files.files)),
 	}
 
-	cFiles := *(*[]C.alpm_file_t)(unsafe.Pointer(&rawItems))
+	cFiles := *(*[]C.alpm_file_t)(unsafe.Pointer(&rawItems)) // nolint
 
 	for i := 0; i < size; i++ {
 		if file, err := convertFile(&cFiles[i]); err == nil {

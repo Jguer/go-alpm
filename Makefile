@@ -17,7 +17,6 @@ build:
 
 .PHONY: test
 test:
-	$(GO) vet $(GOFLAGS) .
 	@test -z "$$(gofmt -l *.go)" || (echo "Files need to be linted. Use make fmt" && false)
 	$(GO) test $(GOFLAGS)  .
 
