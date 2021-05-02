@@ -8,8 +8,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	paconf "github.com/Morganamilo/go-pacmanconf"
+	"log"
 )
 
 func human(size int64) string {
@@ -53,7 +53,6 @@ func main() {
 	}
 	defer h.Release()
 
-
 	PacmanConfig, _, err := paconf.ParseFile("/etc/pacman.conf")
 	if err != nil {
 		fmt.Println(err)
@@ -72,12 +71,13 @@ func main() {
 		}
 		db.SetServers(repo.Servers)
 
-
 		/*
 			Configure repository usage to match with
 			the alpm library provided formats
 		*/
-		if len(repo.Usage) == 0 { db.SetUsage(alpm.UsageAll) }
+		if len(repo.Usage) == 0 {
+			db.SetUsage(alpm.UsageAll)
+		}
 		for _, usage := range repo.Usage {
 			switch usage {
 			case "Sync":
