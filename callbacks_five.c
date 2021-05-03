@@ -4,6 +4,8 @@
 //
 // MIT Licensed. See LICENSE for details.
 
+#if !SIX
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -12,7 +14,7 @@
 void logCallback(alpm_loglevel_t level, char *cstring);
 void questionCallback(alpm_question_t *question);
 
-void go_alpm_log_cb(alpm_loglevel_t level, const char *fmt, va_list arg) {
+static void _log_cb(alpm_loglevel_t level, const char *fmt, va_list arg) {
   char *s = malloc(128);
   if (s == NULL) return;
   int16_t length = vsnprintf(s, 128, fmt, arg);
@@ -26,14 +28,16 @@ void go_alpm_log_cb(alpm_loglevel_t level, const char *fmt, va_list arg) {
   }
 }
 
-void go_alpm_question_cb(alpm_question_t *question) {
+static void _question_cb(alpm_question_t *question) {
 	questionCallback(question);
 }
 
 void go_alpm_set_logging(alpm_handle_t *handle) {
-	alpm_option_set_logcb(handle, go_alpm_log_cb);
+	alpm_option_set_logcb(handle, _log_cb);
 }
 
 void go_alpm_set_question(alpm_handle_t *handle) {
-	alpm_option_set_questioncb(handle, go_alpm_question_cb);
+	alpm_option_set_questioncb(handle, _question_cb);
 }
+
+#endif
