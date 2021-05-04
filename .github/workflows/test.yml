@@ -23,3 +23,14 @@ jobs:
         run: /app/bin/golangci-lint run ./...
       - name: Run Build and Tests
         run: make test
+      - name: Build and install pacman-git
+        run: |
+                useradd github
+                pacman -Sy --noconfirm --needed sudo base-devel git
+                echo "github ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+                git clone https://aur.archlinux.org/pacman-git
+                chown -R github pacman-git
+                su github -c "cd pacman-git; yes | makepkg -si --nocheck"
+      - name: Run Build and Tests with pacman-git
+        run: make test
+
