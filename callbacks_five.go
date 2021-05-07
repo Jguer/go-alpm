@@ -46,7 +46,7 @@ func (h *Handle) SetLogCallback(cb logCallbackSig) {
 	C.go_alpm_set_logging(h.ptr)
 }
 
-func (h *Handle) alpmSetQuestion(cb questionCallbackSig) {
+func (h *Handle) SetQuestionCallback(cb questionCallbackSig) {
 	globalQuestionCallback = cb
 	C.go_alpm_set_question(h.ptr)
 }
