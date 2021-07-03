@@ -1,23 +1,13 @@
 export GO111MODULE=on
 
-GOFLAGS := -v -modcacherw
-EXTRA_GOFLAGS ?=
-LDFLAGS := $(LDFLAGS)
 GO ?= go
 
 SOURCES ?= $(shell find . -name "*.go")
 
-.PHONY: default
-default: build
-
-.PHONY: build
-build:
-	$(GO) build $(GOFLAGS) -ldflags '-s -w $(LDFLAGS)' $(EXTRA_GOFLAGS)
-
 .PHONY: test
 test:
 	@test -z "$$(gofmt -l *.go)" || (echo "Files need to be linted. Use make fmt" && false)
-	$(GO) test $(GOFLAGS)  .
+	$(GO) test -v .
 
 .PHONY: fmt
 fmt:

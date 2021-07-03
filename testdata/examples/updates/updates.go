@@ -8,8 +8,9 @@ package main
 
 import (
 	"fmt"
-	paconf "github.com/Morganamilo/go-pacmanconf"
 	"log"
+
+	paconf "github.com/Morganamilo/go-pacmanconf"
 )
 
 func human(size int64) string {
