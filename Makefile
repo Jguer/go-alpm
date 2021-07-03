@@ -6,7 +6,6 @@ LDFLAGS := $(LDFLAGS)
 GO ?= go
 
 SOURCES ?= $(shell find . -name "*.go")
-GOFLAGS += $(shell pacman -T 'pacman>6' && echo "-tags six")
 
 .PHONY: default
 default: build

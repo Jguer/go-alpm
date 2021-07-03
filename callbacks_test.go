@@ -1,5 +1,3 @@
-// +build six
-
 package alpm
 
 import (
