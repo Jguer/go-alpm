@@ -3,8 +3,9 @@ package alpm_test
 import (
 	"testing"
 
-	"github.com/Jguer/go-alpm/v2"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/Jguer/go-alpm/v2"
 )
 
 func TestPkgFilesList(t *testing.T) {

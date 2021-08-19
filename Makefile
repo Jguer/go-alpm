@@ -7,7 +7,7 @@ SOURCES ?= $(shell find . -name "*.go")
 .PHONY: test
 test:
 	@test -z "$$(gofmt -l *.go)" || (echo "Files need to be linted. Use make fmt" && false)
-	$(GO) test -v .
+	$(GO) test -race -covermode=atomic -v .
 
 .PHONY: fmt
 fmt:
