@@ -13,7 +13,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/Jguer/go-alpm/v2"
+	alpm "github.com/Jguer/go-alpm/v2"
 )
 
 // Auxiliary formatting
@@ -48,11 +48,11 @@ type PrettyPackage struct {
 }
 
 func (p PrettyPackage) PrettyBuildDate() string {
-	return p.BuildDate().Format(time.RFC1123)
+	return p.Package.BuildDate().Format(time.RFC1123)
 }
 
 func (p PrettyPackage) PrettyInstallDate() string {
-	return p.InstallDate().Format(time.RFC1123)
+	return p.Package.InstallDate().Format(time.RFC1123)
 }
 
 // Tests package attribute getters.
