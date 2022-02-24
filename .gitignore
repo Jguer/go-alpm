@@ -1,1 +1,28 @@
-_obj/
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Folders
+_obj
+_test
+.vscode
+
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
+
+*.exe
+*.test
+*.prof
+*.tar.gz
+qemu-*
+.go
+
+# Locale
+*.mo
+*.pot
+*.po~
+*.pprof
