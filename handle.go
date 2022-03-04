@@ -42,20 +42,23 @@ func (h *Handle) optionGetList(f func(*C.alpm_handle_t) *C.alpm_list_t) (StringL
 }
 
 func (h *Handle) optionSetList(hookDirs []string, f func(*C.alpm_handle_t, *C.alpm_list_t) C.int) error {
-	var list *C.alpm_list_t
+	var cList *C.alpm_list_t
 
 	for _, dir := range hookDirs {
-		cDir := C.CString(dir)
-		list = C.alpm_list_add(list, unsafe.Pointer(cDir))
-
-		C.free(unsafe.Pointer(cDir))
+		cDir := unsafe.Pointer(C.CString(dir))
+		cList = C.alpm_list_add(cList, cDir)
 	}
 
-	if ok := f(h.ptr, list); ok < 0 {
+	if ok := f(h.ptr, cList); ok < 0 {
 		return h.LastError()
 	}
 
-	return nil
+	goList := (*list)(unsafe.Pointer(cList))
+
+	return goList.forEach(func(p unsafe.Pointer) error {
+		C.free(p)
+		return nil
+	})
 }
 
 func (h *Handle) optionAddList(hookDir string, f func(*C.alpm_handle_t, *C.char) C.int) error {
