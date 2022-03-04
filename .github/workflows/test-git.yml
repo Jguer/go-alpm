@@ -1,0 +1,31 @@
+name: Test pacman-git
+# This workflow is triggered on pushes to the repository.
+on:
+  push:
+    branches-ignore:
+      - pacman*
+    paths-ignore:
+      - "examples/**"
+      - "Dockerfile"
+      - "**/builder-image.yml"
+  pull_request:
+
+jobs:
+  build:
+    name: Build and test go-alpm
+    runs-on: ubuntu-latest
+    container:
+      image: jguer/goalpm-builder:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build and install pacman-git
+        run: |
+                useradd github
+                pacman -Syu --noconfirm --overwrite=* --needed sudo base-devel git
+                echo "github ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+                git clone https://aur.archlinux.org/pacman-git
+                chown -R github pacman-git
+                su github -c "cd pacman-git; yes | makepkg -si --nocheck"
+      - name: Run Build and Tests with pacman-git
+        run: make test
