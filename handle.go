@@ -48,7 +48,7 @@ func (h *Handle) optionSetList(hookDirs []string, f func(*C.alpm_handle_t, *C.al
 		cDir := C.CString(dir)
 		list = C.alpm_list_add(list, unsafe.Pointer(cDir))
 
-		defer C.free(unsafe.Pointer(cDir))
+		C.free(unsafe.Pointer(cDir))
 	}
 
 	if ok := f(h.ptr, list); ok < 0 {

@@ -8,21 +8,6 @@ package alpm
 
 /*
 #include <alpm.h>
-
-int pkg_cmp(const void *v1, const void *v2)
-{
-    alpm_pkg_t *p1 = (alpm_pkg_t *)v1;
-    alpm_pkg_t *p2 = (alpm_pkg_t *)v2;
-    off_t s1 = alpm_pkg_get_isize(p1);
-    off_t s2 = alpm_pkg_get_isize(p2);
-
-    if (s1 > s2)
-        return -1;
-    else if (s1 < s2)
-        return 1;
-    else
-        return 0;
-}
 */
 import "C"
 
@@ -59,21 +44,6 @@ func (l PackageList) Slice() []IPackage {
 	})
 
 	return slice
-}
-
-// SortBySize returns a PackageList sorted by size.
-func (l PackageList) SortBySize() IPackageList {
-	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
-
-	pkgCache := (*list)(unsafe.Pointer(
-		C.alpm_list_msort(pkgList, //nolint
-			C.alpm_list_count(pkgList),
-			C.alpm_list_fn_cmp(C.pkg_cmp))))
-	if pkgCache == nil {
-		return nil
-	}
-
-	return PackageList{pkgCache, l.handle}
 }
 
 // DependList describes a linkedlist of dependency type packages.
@@ -277,14 +247,14 @@ func (pkg *Package) ComputeRequiredBy() []string {
 	requiredby := make([]string, 0)
 
 	for i := (*list)(unsafe.Pointer(result)); i != nil; i = i.Next {
-		defer C.free(unsafe.Pointer(i))
-
 		if i.Data != nil {
-			defer C.free(i.Data)
-
 			name := C.GoString((*C.char)(i.Data))
 			requiredby = append(requiredby, name)
+
+			C.free(i.Data)
 		}
+
+		C.free(unsafe.Pointer(i))
 	}
 
 	return requiredby
@@ -296,14 +266,14 @@ func (pkg *Package) ComputeOptionalFor() []string {
 	optionalfor := make([]string, 0)
 
 	for i := (*list)(unsafe.Pointer(result)); i != nil; i = i.Next {
-		defer C.free(unsafe.Pointer(i))
-
 		if i.Data != nil {
-			defer C.free(i.Data)
-
 			name := C.GoString((*C.char)(i.Data))
 			optionalfor = append(optionalfor, name)
+
+			C.free(i.Data)
 		}
+
+		C.free(unsafe.Pointer(i))
 	}
 
 	return optionalfor

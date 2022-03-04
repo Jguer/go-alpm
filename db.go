@@ -121,9 +121,8 @@ func (db *DB) SetServers(servers []string) {
 	for _, srv := range servers {
 		Csrv := C.CString(srv)
 
-		defer C.free(unsafe.Pointer(Csrv))
-
 		C.alpm_db_add_server(db.ptr, Csrv)
+		C.free(unsafe.Pointer(Csrv))
 	}
 }
 
@@ -153,18 +152,6 @@ func (db *DB) Pkg(name string) IPackage {
 	}
 
 	return &Package{ptr, db.handle}
-}
-
-// PkgCachebyGroup returns a PackageList of packages belonging to a group
-func (l DBList) FindGroupPkgs(name string) IPackageList {
-	cName := C.CString(name)
-
-	defer C.free(unsafe.Pointer(cName))
-
-	pkglist := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
-	pkgcache := (*list)(unsafe.Pointer(C.alpm_find_group_pkgs(pkglist, cName)))
-
-	return PackageList{pkgcache, l.handle}
 }
 
 // PkgCache returns the list of packages of the database
