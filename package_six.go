@@ -1,4 +1,5 @@
 //go:build !next
+// +build !next
 
 // package.go - libalpm package type and methods.
 //
