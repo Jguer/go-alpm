@@ -10,7 +10,7 @@ This project is MIT Licensed. See LICENSE for details.
 - Import the go-alpm repository in your go script
 
 ```go
-	import "github.com/jguer/go-alpm/v2"
+	import "github.com/Jguer/go-alpm/v2"
 ```
 
 - Try the included examples in [examples](testdata/examples/)
