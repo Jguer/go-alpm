@@ -1,5 +1,5 @@
 FROM lopsided/archlinux:devel
-LABEL maintainer="Jguer,joaogg3 at google mail"
+LABEL maintainer="Jguer, joguer@proton.me"
 
 ENV GO111MODULE=on
 WORKDIR /app
