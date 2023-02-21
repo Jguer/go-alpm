@@ -26,8 +26,8 @@ type (
 )
 
 var (
-	logCallbackContextPool      callbackContextPool = callbackContextPool{}
-	questionCallbackContextPool callbackContextPool = callbackContextPool{}
+	logCallbackContextPool      = callbackContextPool{}
+	questionCallbackContextPool = callbackContextPool{}
 )
 
 func DefaultLogCallback(ctx interface{}, lvl LogLevel, s string) {

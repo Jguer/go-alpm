@@ -37,7 +37,7 @@ func (l DBList) ForEach(f func(IDB) error) error {
 	})
 }
 
-// Slice converst DB list to DB slice.
+// Slice converts DB list to DB slice.
 func (l DBList) Slice() []IDB {
 	slice := []IDB{}
 	_ = l.ForEach(func(db IDB) error {
@@ -165,8 +165,8 @@ func (db *DB) PkgCache() IPackageList {
 // In case of error the Package List will be nil
 func (db *DB) Search(targets []string) IPackageList {
 	var (
-		needles *C.alpm_list_t = nil
-		ret     *C.alpm_list_t = nil
+		needles *C.alpm_list_t
+		ret     *C.alpm_list_t
 	)
 
 	for _, str := range targets {

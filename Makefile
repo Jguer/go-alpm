@@ -3,8 +3,7 @@ export GO111MODULE=on
 GO ?= go
 
 SOURCES ?= $(shell find . -name "*.go")
-GOFLAGS += $(shell pacman -T 'pacman-git' && echo "-tags next")
-
+GOFLAGS += $(shell pacman -T 'pacman-git' >/dev/null 2>&1 && echo "-tags next")
 .PHONY: test
 test:
 	@test -z "$$(gofmt -l *.go)" || (echo "Files need to be linted. Use make fmt" && false)
