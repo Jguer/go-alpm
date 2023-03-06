@@ -1,28 +1,29 @@
-package alpm
+package alpm_test
 
 import (
 	"testing"
 
+	alpm "github.com/Jguer/go-alpm/v2"
 	"github.com/Morganamilo/go-pacmanconf"
 	"github.com/stretchr/testify/assert"
 )
 
-type AlpmExecutor struct {
-	handle       *Handle
-	localDB      IDB
-	syncDB       IDBList
-	syncDBsCache []IDB
+type alpmExecutor struct {
+	handle       *alpm.Handle
+	localDB      alpm.IDB
+	syncDB       alpm.IDBList
+	syncDBsCache []alpm.IDB
 	conf         *pacmanconf.Config
 }
 
-func (ae *AlpmExecutor) RefreshHandle() error {
+func (ae *alpmExecutor) RefreshHandle() error {
 	if ae.handle != nil {
 		if errRelease := ae.handle.Release(); errRelease != nil {
 			return errRelease
 		}
 	}
 
-	alpmHandle, err := Initialize(ae.conf.RootDir, ae.conf.DBPath)
+	alpmHandle, err := alpm.Initialize(ae.conf.RootDir, ae.conf.DBPath)
 	if err != nil {
 		return err
 	}
@@ -44,32 +45,32 @@ func (ae *AlpmExecutor) RefreshHandle() error {
 	return err
 }
 
-func toUsage(usages []string) Usage {
+func toUsage(usages []string) alpm.Usage {
 	if len(usages) == 0 {
-		return UsageAll
+		return alpm.UsageAll
 	}
 
-	var ret Usage
+	var ret alpm.Usage
 
 	for _, usage := range usages {
 		switch usage {
 		case "Sync":
-			ret |= UsageSync
+			ret |= alpm.UsageSync
 		case "Search":
-			ret |= UsageSearch
+			ret |= alpm.UsageSearch
 		case "Install":
-			ret |= UsageInstall
+			ret |= alpm.UsageInstall
 		case "Upgrade":
-			ret |= UsageUpgrade
+			ret |= alpm.UsageUpgrade
 		case "All":
-			ret |= UsageAll
+			ret |= alpm.UsageAll
 		}
 	}
 
 	return ret
 }
 
-func configureAlpm(pacmanConf *pacmanconf.Config, alpmHandle *Handle) error {
+func configureAlpm(pacmanConf *pacmanconf.Config, alpmHandle *alpm.Handle) error {
 	for _, repo := range pacmanConf.Repos {
 		// TODO: set SigLevel
 		alpmDB, err := alpmHandle.RegisterSyncDB(repo.Name, 0)
@@ -127,8 +128,8 @@ func configureAlpm(pacmanConf *pacmanconf.Config, alpmHandle *Handle) error {
 	return alpmHandle.SetCheckSpace(pacmanConf.CheckSpace)
 }
 
-func NewExecutor(pacmanConf *pacmanconf.Config) (*AlpmExecutor, error) {
-	ae := &AlpmExecutor{conf: pacmanConf}
+func NewExecutor(pacmanConf *pacmanconf.Config) (*alpmExecutor, error) {
+	ae := &alpmExecutor{conf: pacmanConf}
 
 	err := ae.RefreshHandle()
 	if err != nil {
@@ -241,7 +242,7 @@ func TestAlpmExecutor(t *testing.T) {
 	assert.Equal(t, true, check)
 }
 
-func alpmTestGetArch(h *Handle) ([]string, error) {
+func alpmTestGetArch(h *alpm.Handle) ([]string, error) {
 	architectures, err := h.GetArchitectures()
 
 	return architectures.Slice(), err
