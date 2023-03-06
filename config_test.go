@@ -3,9 +3,10 @@ package alpm_test
 import (
 	"testing"
 
-	alpm "github.com/Jguer/go-alpm/v2"
 	"github.com/Morganamilo/go-pacmanconf"
 	"github.com/stretchr/testify/assert"
+
+	alpm "github.com/Jguer/go-alpm/v2"
 )
 
 type alpmExecutor struct {

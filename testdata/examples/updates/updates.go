@@ -10,8 +10,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Jguer/go-alpm/v2"
 	paconf "github.com/Morganamilo/go-pacmanconf"
+
+	"github.com/Jguer/go-alpm/v2"
 )
 
 func human(size int64) string {

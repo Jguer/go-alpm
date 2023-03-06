@@ -19,7 +19,7 @@ linters-settings:
   gocyclo:
     min-complexity: 15
   goimports:
-    local-prefixes: github.com/Jguer/yay/v10
+    local-prefixes: github.com/Jguer/go-alpm/v2
   gomnd:
     settings:
       mnd:
@@ -40,10 +40,12 @@ linters:
   disable-all: true
   enable:
     - bodyclose
-    - deadcode
     - depguard
+    - dogsled
     - dupl
     - errcheck
+    - errorlint
+    - exportloopref
     - gochecknoinits
     - gocritic
     - gofmt
@@ -56,20 +58,15 @@ linters:
     - lll
     - misspell
     - nakedret
-    - prealloc
-    - revive
-    - rowserrcheck
+    - noctx
+    - nolintlint
     - staticcheck
-    - structcheck
     - stylecheck
     - typecheck
     - unconvert
     - unparam
     - unused
-    - varcheck
     - whitespace
-    - wsl
-    - godot
 
 run:
 
