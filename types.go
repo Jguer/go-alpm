@@ -25,8 +25,8 @@ type Depend struct {
 	Mod         DepMod
 }
 
-func convertDepend(dep *C.alpm_depend_t) Depend {
-	return Depend{
+func convertDepend(dep *C.alpm_depend_t) *Depend {
+	return &Depend{
 		Name:        C.GoString(dep.name),
 		Version:     C.GoString(dep.version),
 		Mod:         DepMod(dep.mod),
@@ -239,8 +239,8 @@ func (question QuestionInstallIgnorepkg) Install() bool {
 	return question.ptr.install == 1
 }
 
-func (question QuestionInstallIgnorepkg) Pkg(h *Handle) Package {
-	return Package{
+func (question QuestionInstallIgnorepkg) Pkg(h *Handle) IPackage {
+	return &Package{
 		question.ptr.pkg,
 		*h,
 	}
@@ -266,14 +266,14 @@ func (question QuestionReplace) Replace() bool {
 	return question.ptr.replace == 1
 }
 
-func (question QuestionReplace) NewPkg(h *Handle) *Package {
+func (question QuestionReplace) NewPkg(h *Handle) IPackage {
 	return &Package{
 		question.ptr.newpkg,
 		*h,
 	}
 }
 
-func (question QuestionReplace) OldPkg(h *Handle) *Package {
+func (question QuestionReplace) OldPkg(h *Handle) IPackage {
 	return &Package{
 		question.ptr.oldpkg,
 		*h,
@@ -296,13 +296,13 @@ func (question QuestionSelectProvider) UseIndex() int {
 	return int(question.ptr.use_index)
 }
 
-func (question QuestionSelectProvider) Providers(h *Handle) PackageList {
+func (question QuestionSelectProvider) Providers(h *Handle) IPackageList {
 	return PackageList{
 		(*list)(unsafe.Pointer(question.ptr.providers)),
 		*h,
 	}
 }
 
-func (question QuestionSelectProvider) Dep() Depend {
+func (question QuestionSelectProvider) Dep() *Depend {
 	return convertDepend(question.ptr.depend)
 }

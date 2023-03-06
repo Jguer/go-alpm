@@ -17,17 +17,17 @@ type IPackage interface {
 	// BuildDate returns the BuildDate of the package.
 	BuildDate() time.Time
 	// Conflicts returns the conflicts of the package as a DependList.
-	Conflicts() DependList
+	Conflicts() IDependList
 	// DB returns the package's origin database.
 	DB() IDB
 	// Depends returns the package's dependency list.
-	Depends() DependList
+	Depends() IDependList
 	// Depends returns the package's optional dependency list.
-	OptionalDepends() DependList
+	OptionalDepends() IDependList
 	// Depends returns the package's check dependency list.
-	CheckDepends() DependList
+	CheckDepends() IDependList
 	// Depends returns the package's make dependency list.
-	MakeDepends() DependList
+	MakeDepends() IDependList
 	// Description returns the package's description.
 	Description() string
 	// Files returns the file list of the package.
@@ -51,13 +51,13 @@ type IPackage interface {
 	// Packager returns package packager name.
 	Packager() string
 	// Provides returns DependList of packages provides by package.
-	Provides() DependList
+	Provides() IDependList
 	// Reason returns package install reason.
 	Reason() PkgReason
 	// Origin returns package origin.
 	Origin() PkgFrom
 	// Replaces returns a DependList with the packages this package replaces.
-	Replaces() DependList
+	Replaces() IDependList
 	// Size returns the packed package size.
 	Size() int64
 	// URL returns the upstream URL of the package.
@@ -88,6 +88,13 @@ type IPackageList interface {
 	SortBySize() IPackageList
 	// FindSatisfier finds a package that satisfies depstring from PkgList
 	FindSatisfier(string) (IPackage, error)
+}
+
+type IDependList interface {
+	// ForEach executes an action on each package of the DependList.
+	ForEach(func(*Depend) error) error
+	// Slice converts the DependList to a Depend Slice.
+	Slice() []Depend
 }
 
 // IDB is an interface type for alpm.DB.

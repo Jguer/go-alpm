@@ -50,7 +50,7 @@ func (l PackageList) Slice() []IPackage {
 type DependList struct{ *list }
 
 // ForEach executes an action on each package of the DependList.
-func (l DependList) ForEach(f func(Depend) error) error {
+func (l DependList) ForEach(f func(*Depend) error) error {
 	return l.forEach(func(p unsafe.Pointer) error {
 		dep := convertDepend((*C.alpm_depend_t)(p))
 		return f(dep)
@@ -60,8 +60,8 @@ func (l DependList) ForEach(f func(Depend) error) error {
 // Slice converts the DependList to a Depend Slice.
 func (l DependList) Slice() []Depend {
 	slice := []Depend{}
-	_ = l.ForEach(func(dep Depend) error {
-		slice = append(slice, dep)
+	_ = l.ForEach(func(dep *Depend) error {
+		slice = append(slice, *dep)
 		return nil
 	})
 
@@ -102,7 +102,7 @@ func (pkg *Package) BuildDate() time.Time {
 }
 
 // Conflicts returns the conflicts of the package as a DependList.
-func (pkg *Package) Conflicts() DependList {
+func (pkg *Package) Conflicts() IDependList {
 	ptr := unsafe.Pointer(C.alpm_pkg_get_conflicts(pkg.pmpkg))
 	return DependList{(*list)(ptr)}
 }
@@ -118,25 +118,25 @@ func (pkg *Package) DB() IDB {
 }
 
 // Depends returns the package's dependency list.
-func (pkg *Package) Depends() DependList {
+func (pkg *Package) Depends() IDependList {
 	ptr := unsafe.Pointer(C.alpm_pkg_get_depends(pkg.pmpkg))
 	return DependList{(*list)(ptr)}
 }
 
 // Depends returns the package's optional dependency list.
-func (pkg *Package) OptionalDepends() DependList {
+func (pkg *Package) OptionalDepends() IDependList {
 	ptr := unsafe.Pointer(C.alpm_pkg_get_optdepends(pkg.pmpkg))
 	return DependList{(*list)(ptr)}
 }
 
 // Depends returns the package's check dependency list.
-func (pkg *Package) CheckDepends() DependList {
+func (pkg *Package) CheckDepends() IDependList {
 	ptr := unsafe.Pointer(C.alpm_pkg_get_checkdepends(pkg.pmpkg))
 	return DependList{(*list)(ptr)}
 }
 
 // Depends returns the package's make dependency list.
-func (pkg *Package) MakeDepends() DependList {
+func (pkg *Package) MakeDepends() IDependList {
 	ptr := unsafe.Pointer(C.alpm_pkg_get_makedepends(pkg.pmpkg))
 	return DependList{(*list)(ptr)}
 }
@@ -202,7 +202,7 @@ func (pkg *Package) Packager() string {
 }
 
 // Provides returns DependList of packages provides by package.
-func (pkg *Package) Provides() DependList {
+func (pkg *Package) Provides() IDependList {
 	ptr := unsafe.Pointer(C.alpm_pkg_get_provides(pkg.pmpkg))
 	return DependList{(*list)(ptr)}
 }
@@ -220,7 +220,7 @@ func (pkg *Package) Origin() PkgFrom {
 }
 
 // Replaces returns a DependList with the packages this package replaces.
-func (pkg *Package) Replaces() DependList {
+func (pkg *Package) Replaces() IDependList {
 	ptr := unsafe.Pointer(C.alpm_pkg_get_replaces(pkg.pmpkg))
 	return DependList{(*list)(ptr)}
 }

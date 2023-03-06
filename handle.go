@@ -366,7 +366,7 @@ func (h *Handle) RemoveIgnoreGroup(dir string) (bool, error) {
 }*/
 
 // use alpm_depend_t
-func (h *Handle) AssumeInstalled() (DependList, error) {
+func (h *Handle) AssumeInstalled() (IDependList, error) {
 	alpmList := C.alpm_option_get_assumeinstalled(h.ptr)
 	depList := DependList{(*list)(unsafe.Pointer(alpmList))}
 
