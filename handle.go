@@ -408,6 +408,11 @@ func (h *Handle) SyncDBs() (IDBList, error) {
 	return &DBList{(*list)(unsafe.Pointer(dblist)), *h}, nil
 }
 
+// NewDBList returns a new empty DB list.
+func (h *Handle) NewDBList() IDBList {
+	return &DBList{nil, *h}
+}
+
 func (h *Handle) CheckSpace() (bool, error) {
 	ok := C.alpm_option_get_checkspace(h.ptr)
 

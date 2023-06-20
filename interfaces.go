@@ -123,6 +123,8 @@ type IDBList interface {
 	ForEach(func(IDB) error) error
 	// Slice converts DB list to DB slice.
 	Slice() []IDB
+	// Append modifies DB list with given DB appended.
+	Append(IDB)
 	// PkgCachebyGroup returns a PackageList of packages belonging to a group
 	FindGroupPkgs(string) IPackageList
 	// FindSatisfier searches a DBList for a package that satisfies depstring

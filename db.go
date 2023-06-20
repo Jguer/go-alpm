@@ -48,6 +48,16 @@ func (l DBList) Slice() []IDB {
 	return slice
 }
 
+// Append modifies a DB list by appending the given DB.
+func (l *DBList) Append(db IDB) {
+	cdblist := (*C.alpm_list_t)(unsafe.Pointer(l.list))
+	cdb := unsafe.Pointer(db.(*DB).ptr)
+
+	cdblist = C.alpm_list_add(cdblist, cdb)
+
+	l.list = (*list)(unsafe.Pointer(cdblist))
+}
+
 // SyncDBByName finds a registered database by name.
 func (h *Handle) SyncDBByName(name string) (db IDB, err error) {
 	dblist, err := h.SyncDBs()
@@ -68,6 +78,20 @@ func (h *Handle) SyncDBByName(name string) (db IDB, err error) {
 	}
 
 	return nil, fmt.Errorf("database %s not found", name)
+}
+
+// SyncDBListByDBName creates and returns a database list with a single
+// database given by name.
+func (h *Handle) SyncDBListByDBName(name string) (IDBList, error) {
+	db, err := h.SyncDBByName(name)
+	if err != nil {
+		return nil, err
+	}
+
+	dblist := h.NewDBList()
+	dblist.Append(db)
+
+	return dblist, nil
 }
 
 // RegisterSyncDB Loads a sync database with given name and signature check level.
