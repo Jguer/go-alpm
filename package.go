@@ -213,6 +213,11 @@ func (pkg *Package) Reason() PkgReason {
 	return PkgReason(reason)
 }
 
+// SetReason sets the package install reason.
+func (pkg *Package) SetReason(reason PkgReason) {
+	C.alpm_pkg_set_reason(pkg.pmpkg, (C.alpm_pkgreason_t)(reason))
+}
+
 // Origin returns package origin.
 func (pkg *Package) Origin() PkgFrom {
 	origin := C.alpm_pkg_get_origin(pkg.pmpkg)
