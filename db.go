@@ -206,3 +206,15 @@ func (db *DB) Search(targets []string) IPackageList {
 
 	return PackageList{(*list)(unsafe.Pointer(ret)), db.handle}
 }
+
+// PkgCachebyGroup returns a PackageList of packages belonging to a group
+func (l DBList) FindGroupPkgs(name string) IPackageList {
+	cName := C.CString(name)
+
+	defer C.free(unsafe.Pointer(cName))
+
+	pkglist := (*C.struct__alpm_list_t)(unsafe.Pointer(l.list))
+	pkgcache := (*list)(unsafe.Pointer(C.alpm_find_group_pkgs(pkglist, cName)))
+
+	return PackageList{pkgcache, l.handle}
+}

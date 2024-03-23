@@ -1,6 +1,3 @@
-//go:build !next
-// +build !next
-
 package alpm
 
 /*
@@ -20,8 +17,8 @@ func (l DBList) FindSatisfier(depstring string) (IPackage, error) {
 
 	defer C.free(unsafe.Pointer(cDepString))
 
-	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
-	pkgHandle := (*C.struct___alpm_handle_t)(unsafe.Pointer(l.handle.ptr))
+	pkgList := (*C.struct__alpm_list_t)(unsafe.Pointer(l.list))
+	pkgHandle := (*C.struct__alpm_handle_t)(unsafe.Pointer(l.handle.ptr))
 
 	ptr := C.alpm_find_dbs_satisfier(pkgHandle, pkgList, cDepString)
 	if ptr == nil {
@@ -38,7 +35,7 @@ func (l PackageList) FindSatisfier(depstring string) (IPackage, error) {
 
 	defer C.free(unsafe.Pointer(cDepString))
 
-	pkgList := (*C.struct___alpm_list_t)(unsafe.Pointer(l.list))
+	pkgList := (*C.struct__alpm_list_t)(unsafe.Pointer(l.list))
 
 	ptr := C.alpm_find_satisfier(pkgList, cDepString)
 	if ptr == nil {
