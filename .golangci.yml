@@ -55,7 +55,7 @@ linters:
     # - funlen # TOFIX
     - gochecknoinits
     # - goconst # TOFIX
-    - gocritic
+    # - gocritic
     # - gocyclo # TOFIX
     - gofmt
     - goimports

@@ -197,7 +197,7 @@ func (db *DB) Search(targets []string) IPackageList {
 		needles = C.alpm_list_add(needles, unsafe.Pointer(C.CString(str)))
 	}
 
-	ok := C.alpm_db_search(db.ptr, needles, &ret) //nolint
+	ok := C.alpm_db_search(db.ptr, needles, &ret)
 	if ok != 0 {
 		return PackageList{nil, db.handle}
 	}

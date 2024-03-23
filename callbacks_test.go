@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	alpm "github.com/Jguer/go-alpm/v2"
+	"github.com/stretchr/testify/require"
 )
 
 type Cnt struct {
@@ -27,7 +28,5 @@ func TestCallbacks(t *testing.T) {
 
 	h.Release()
 
-	if cnt.cnt != 1 {
-		panic(nil)
-	}
+	require.Equal(t, 1, cnt.cnt)
 }

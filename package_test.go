@@ -8,12 +8,12 @@ package alpm_test
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 	"text/template"
 	"time"
 
 	alpm "github.com/Jguer/go-alpm/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 // Auxiliary formatting
@@ -59,10 +59,7 @@ func (p PrettyPackage) PrettyInstallDate() string {
 func TestPkginfo(t *testing.T) {
 	t.Parallel()
 	pkginfoTemp, er := template.New("info").Parse(pkginfoTemplate)
-	if er != nil {
-		fmt.Printf("couldn't compile template: %s\n", er)
-		panic("template parsing error")
-	}
+	assert.NoError(t, er, "couldn't compile template")
 
 	h, er := alpm.Initialize(root, dbpath)
 	defer h.Release()
