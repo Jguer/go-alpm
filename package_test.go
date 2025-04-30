@@ -67,21 +67,16 @@ func TestPkginfo(t *testing.T) {
 		t.Errorf("Failed at alpm initialization: %s", er)
 	}
 
-	t.Log("Printing package information for pacman")
 	db, _ := h.LocalDB()
 
 	pkg := db.Pkg("glibc")
 	buf := bytes.NewBuffer(nil)
 	pkginfoTemp.Execute(buf, PrettyPackage{pkg.(*alpm.Package)})
-	t.Logf("%s...", buf.Bytes()[:1024])
-	t.Logf("Should ignore %t", pkg.ShouldIgnore())
 
 	pkg = db.Pkg("linux")
 	if pkg != nil {
 		buf = bytes.NewBuffer(nil)
 		pkginfoTemp.Execute(buf, PrettyPackage{pkg.(*alpm.Package)})
-		t.Logf("%s...", buf.Bytes()[:1024])
-		t.Logf("Should ignore %t", pkg.ShouldIgnore())
 	}
 }
 

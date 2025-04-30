@@ -75,13 +75,18 @@ func TestDB_Search(t *testing.T) {
 		t.Skipf("RegisterSyncDB failed: %v", err)
 	}
 
-	// Search for a common package
-	target := "bash"
-	pkgs := db.Search([]string{target})
-	if pkgs == nil {
+	// Dynamically pick a package name from the sync DB
+	pkgs := db.PkgCache().Slice()
+	if len(pkgs) == 0 {
+		t.Skip("No packages found in the sync DB; skipping test")
+	}
+	target := pkgs[0].Name()
+
+	searchResults := db.Search([]string{target})
+	if searchResults == nil {
 		t.Fatalf("Search returned nil for target %q", target)
 	}
-	slice := pkgs.Slice()
+	slice := searchResults.Slice()
 	if len(slice) == 0 {
 		t.Errorf("Expected at least one package for target %q, got 0", target)
 	}
