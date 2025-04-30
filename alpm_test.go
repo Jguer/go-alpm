@@ -35,7 +35,7 @@ func TestRevdeps(t *testing.T) {
 	db, _ := h.LocalDB()
 	pkg := db.Pkg("glibc")
 	for i, pkgname := range pkg.ComputeRequiredBy() {
-		t.Logf(pkgname)
+		t.Log(pkgname)
 		if i == 10 {
 			t.Logf("and %d more...", len(pkg.ComputeRequiredBy())-10)
 			return
