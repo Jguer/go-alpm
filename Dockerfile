@@ -7,6 +7,6 @@ WORKDIR /app
 COPY go.mod .
 
 RUN pacman -Syu --overwrite=* --needed --noconfirm go && \
-    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.51.2 && \
+    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v2.1.5 && \
     go mod download && \
     rm -rfv /var/cache/pacman/* /var/lib/pacman/sync/*
