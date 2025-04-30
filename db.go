@@ -180,8 +180,10 @@ func (db *DB) Pkg(name string) IPackage {
 
 // PkgCache returns the list of packages of the database
 func (db *DB) PkgCache() IPackageList {
+	if db == nil || db.ptr == nil {
+		return PackageList{nil, db.handle}
+	}
 	pkgcache := (*list)(unsafe.Pointer(C.alpm_db_get_pkgcache(db.ptr)))
-
 	return PackageList{pkgcache, db.handle}
 }
 
