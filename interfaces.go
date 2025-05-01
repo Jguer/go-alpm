@@ -1,5 +1,8 @@
 package alpm
 
+// #include <alpm.h>
+import "C"
+
 import (
 	"time"
 )
@@ -76,6 +79,9 @@ type IPackage interface {
 	SyncNewVersion(l IDBList) IPackage
 
 	Type() string
+
+	// Get the underlying alpm pkg type
+	getPmpkg() *C.alpm_pkg_t
 }
 
 // IPackageList exports the alpm.PackageList symbols.

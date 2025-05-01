@@ -303,6 +303,10 @@ func (pkg *Package) Type() string {
 	return "alpm"
 }
 
+func (pkg *Package) getPmpkg() *C.alpm_pkg_t {
+	return pkg.pmpkg
+}
+
 // SortBySize returns a PackageList sorted by size.
 func (l PackageList) SortBySize() IPackageList {
 	pkgList := (*C.struct__alpm_list_t)(unsafe.Pointer(l.list))
