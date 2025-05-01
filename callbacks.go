@@ -30,7 +30,7 @@ var (
 	questionCallbackContextPool = callbackContextPool{}
 )
 
-func DefaultLogCallback(ctx interface{}, lvl LogLevel, s string) {
+func DefaultLogCallback(_ interface{}, lvl LogLevel, s string) {
 	if lvl <= DefaultLogLevel {
 		fmt.Fprintln(os.Stdout, "go-alpm: ", s)
 	}

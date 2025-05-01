@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	alpm "github.com/Jguer/go-alpm/v2"
+
 	"github.com/stretchr/testify/require"
 )
 
