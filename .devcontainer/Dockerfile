@@ -7,6 +7,9 @@ RUN sudo pacman -Syu --noconfirm pacman-contrib fish git-delta openssh bat go
 # Set passwordless sudo for the docker user
 RUN echo "docker ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/docker
 
+# Add /app/bin to the PATH
+ENV PATH="/app/bin:$PATH"
+
 # Create a non-root user and switch to it
 USER docker
 
