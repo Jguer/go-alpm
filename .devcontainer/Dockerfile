@@ -2,7 +2,9 @@
 FROM docker.io/jguer/yay-builder
 
 # Install extra packages (pacman-contrib and fish)
-RUN sudo pacman -Syu --noconfirm pacman-contrib fish git-delta openssh bat go
+# Note: Using -Sy instead of -Syu to avoid full system upgrade which fails
+# due to read-only /etc/resolv.conf and /etc/hosts during Docker build
+RUN sudo pacman -Sy --noconfirm pacman-contrib fish git-delta openssh bat go
 
 # Set passwordless sudo for the docker user
 RUN echo "docker ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/docker

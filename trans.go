@@ -12,8 +12,12 @@ package alpm
 import "C"
 
 import (
+	"fmt"
 	"unsafe"
 )
+
+// ErrInvalidPackageType is returned when an invalid package type is used.
+var ErrInvalidPackageType = fmt.Errorf("invalid Package type")
 
 func (h *Handle) TransInit(flags TransFlag) error {
 	ret := C.alpm_trans_init(h.ptr, C.int(flags))
@@ -82,7 +86,12 @@ func (h *Handle) TransGetFlags() (TransFlag, error) {
 }
 
 func (h *Handle) AddPkg(pkg IPackage) error {
-	ret := C.alpm_add_pkg(h.ptr, pkg.getPmpkg())
+	aPkg, ok := pkg.(*Package)
+	if !ok {
+		return ErrInvalidPackageType
+	}
+
+	ret := C.alpm_add_pkg(h.ptr, aPkg.pmpkg)
 	if ret != 0 {
 		return h.LastError()
 	}
@@ -91,7 +100,11 @@ func (h *Handle) AddPkg(pkg IPackage) error {
 }
 
 func (h *Handle) RemovePkg(pkg IPackage) error {
-	ret := C.alpm_remove_pkg(h.ptr, pkg.getPmpkg())
+	aPkg, ok := pkg.(*Package)
+	if !ok {
+		return ErrInvalidPackageType
+	}
+	ret := C.alpm_remove_pkg(h.ptr, aPkg.pmpkg)
 	if ret != 0 {
 		return h.LastError()
 	}
