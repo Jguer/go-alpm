@@ -35,7 +35,6 @@ Build Date   : {{ .PrettyBuildDate }}
 Install Date : {{ .PrettyInstallDate }}
 Package Size : {{ .Size }} bytes
 Install Size : {{ .ISize }} bytes
-MD5 Sum      : {{ .MD5Sum }}
 SHA256 Sum   : {{ .SHA256Sum }}
 Reason       : {{ .Reason }}
 

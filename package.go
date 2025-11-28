@@ -201,11 +201,6 @@ func (pkg *Package) SHA256Sum() string {
 	return C.GoString(C.alpm_pkg_get_sha256sum(pkg.pmpkg))
 }
 
-// MD5Sum returns package MD5Sum.
-func (pkg *Package) MD5Sum() string {
-	return C.GoString(C.alpm_pkg_get_md5sum(pkg.pmpkg))
-}
-
 // Name returns package name.
 func (pkg *Package) Name() string {
 	return C.GoString(C.alpm_pkg_get_name(pkg.pmpkg))
