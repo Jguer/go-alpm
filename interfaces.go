@@ -47,8 +47,6 @@ type IPackage interface {
 	Licenses() StringList
 	// SHA256Sum returns package SHA256Sum.
 	SHA256Sum() string
-	// MD5Sum returns package MD5Sum.
-	MD5Sum() string
 	// Name returns package name.
 	Name() string
 	// Packager returns package packager name.
